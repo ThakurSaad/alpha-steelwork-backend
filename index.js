@@ -20,14 +20,14 @@ async function run() {
     await client.connect();
     console.log("mongo eating steel");
 
-    const partsCollection = client.db("alpha_steelwork").collection("parts");
+    const toolsCollection = client.db("alpha_steelwork").collection("tools");
 
     //----------------------------  GET api ---------------------------- //
 
     // all parts
-    app.get("/parts", async (req, res) => {
-      const parts = await partsCollection.find().toArray();
-      res.send(parts);
+    app.get("/tools", async (req, res) => {
+      const tools = await toolsCollection.find().toArray();
+      res.send(tools);
     });
   } finally {
   }
