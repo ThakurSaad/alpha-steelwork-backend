@@ -19,6 +19,16 @@ async function run() {
   try {
     await client.connect();
     console.log("mongo eating steel");
+
+    const partsCollection = client.db("alpha_steelwork").collection("parts");
+
+    //----------------------------  GET api ---------------------------- //
+
+    // all parts
+    app.get("/parts", async (req, res) => {
+      const parts = await partsCollection.find().toArray();
+      res.send(parts);
+    });
   } finally {
   }
 }
