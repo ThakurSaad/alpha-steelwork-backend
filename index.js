@@ -42,9 +42,17 @@ async function run() {
     // my orders
     app.get("/order", async (req, res) => {
       const customer = req.query.customer;
-      const order = await ordersCollection
+      const orders = await ordersCollection
         .find({ customer: customer })
         .toArray();
+      res.send(orders);
+    });
+
+    // single order
+    app.get("/order/:id", async (req, res) => {
+      const product = req.params.id;
+      const query = { _id: ObjectId(product) };
+      const order = await ordersCollection.findOne(query);
       res.send(order);
     });
 
@@ -57,7 +65,7 @@ async function run() {
       res.send(result);
     });
 
-    //----------------------------  POST api ---------------------------- //
+    //----------------------------  DELETE api ---------------------------- //
 
     // delete my order
     app.delete("/order/:id", async (req, res) => {
