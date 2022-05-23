@@ -118,6 +118,17 @@ async function run() {
       res.send(result);
     });
 
+    // make admin
+    app.put("/users/admin/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const updateDoc = {
+        $set: { role: "admin" },
+      };
+      const result = await usersCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    });
+
     //----------------------------  DELETE api ---------------------------- //
 
     // delete my order
