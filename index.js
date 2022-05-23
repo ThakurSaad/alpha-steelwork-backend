@@ -68,7 +68,27 @@ async function run() {
 
     //----------------------------  PUT api ---------------------------- //
 
-    // update user
+    // update user data from my profile
+    app.put("/users/:email", async (req, res) => {
+      const email = req.params.email;
+      const user = req.body;
+      console.log(user, email);
+      const filter = { email: email };
+      const updateDoc = {
+        $set: {
+          education: user.education,
+          address: user.address,
+          contact: user.contact,
+          linkedIn: user.linkedIn,
+          faceBook: user.faceBook,
+          hobby: user.hobby,
+        },
+      };
+      const result = await usersCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    });
+
+    // update user on signUp
     app.put("/users", async (req, res) => {
       const email = req.query.email;
       const user = req.body;
