@@ -24,6 +24,9 @@ async function run() {
     const toolsCollection = client.db("alpha_steelwork").collection("tools");
     const ordersCollection = client.db("alpha_steelwork").collection("orders");
     const usersCollection = client.db("alpha_steelwork").collection("users");
+    const reviewsCollection = client
+      .db("alpha_steelwork")
+      .collection("reviews");
 
     //----------------------------  GET api ---------------------------- //
 
@@ -77,6 +80,12 @@ async function run() {
       const user = await usersCollection.findOne({ email: email });
       const isAdmin = user.role === "admin";
       res.send({ admin: isAdmin });
+    });
+
+    // all reviews
+    app.get("/reviews", async (req, res) => {
+      const reviews = await reviewsCollection.find().toArray();
+      res.send(reviews);
     });
 
     //----------------------------  POST api ---------------------------- //
