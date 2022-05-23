@@ -39,12 +39,31 @@ async function run() {
       res.send(tool);
     });
 
+    // my orders
+    app.get("/order", async (req, res) => {
+      const customer = req.query.customer;
+      const order = await ordersCollection
+        .find({ customer: customer })
+        .toArray();
+      res.send(order);
+    });
+
     //----------------------------  POST api ---------------------------- //
 
     // post order
     app.post("/order", async (req, res) => {
       const order = req.body;
       const result = await ordersCollection.insertOne(order);
+      res.send(result);
+    });
+
+    //----------------------------  POST api ---------------------------- //
+
+    // delete my order
+    app.delete("/order/:id", async (req, res) => {
+      const id = req.params.id;
+      const order = { _id: ObjectId(id) };
+      const result = await ordersCollection.deleteOne(order);
       res.send(result);
     });
   } finally {
