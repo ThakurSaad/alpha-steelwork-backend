@@ -22,6 +22,7 @@ async function run() {
 
     const toolsCollection = client.db("alpha_steelwork").collection("tools");
     const ordersCollection = client.db("alpha_steelwork").collection("orders");
+    const usersCollection = client.db("alpha_steelwork").collection("users");
 
     //----------------------------  GET api ---------------------------- //
 
@@ -62,6 +63,25 @@ async function run() {
     app.post("/order", async (req, res) => {
       const order = req.body;
       const result = await ordersCollection.insertOne(order);
+      res.send(result);
+    });
+
+    //----------------------------  PUT api ---------------------------- //
+
+    // update user
+    app.put("/users", async (req, res) => {
+      const email = req.query.email;
+      const user = req.body;
+      const filter = { email: email };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: user,
+      };
+      const result = await usersCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
       res.send(result);
     });
 
