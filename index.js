@@ -75,7 +75,7 @@ async function run() {
     app.get("/users/admin/:email", async (req, res) => {
       const email = req.params.email;
       const user = await usersCollection.findOne({ email: email });
-      const isAdmin = user.role === 'admin';
+      const isAdmin = user.role === "admin";
       res.send({ admin: isAdmin });
     });
 
@@ -85,6 +85,13 @@ async function run() {
     app.post("/order", async (req, res) => {
       const order = req.body;
       const result = await ordersCollection.insertOne(order);
+      res.send(result);
+    });
+
+    // post new tool
+    app.post("/tools", async (req, res) => {
+      const tool = req.body;
+      const result = await toolsCollection.insertOne(tool);
       res.send(result);
     });
 
