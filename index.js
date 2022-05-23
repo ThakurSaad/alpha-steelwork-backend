@@ -104,6 +104,13 @@ async function run() {
       res.send(result);
     });
 
+    // post new review
+    app.post("/reviews", async (req, res) => {
+      const review = req.body;
+      const result = await reviewsCollection.insertOne(review);
+      res.send(result);
+    });
+
     //----------------------------  PUT api ---------------------------- //
 
     // update user data from my profile
