@@ -21,6 +21,7 @@ async function run() {
     console.log("mongo eating steel");
 
     const toolsCollection = client.db("alpha_steelwork").collection("tools");
+    const ordersCollection = client.db("alpha_steelwork").collection("orders");
 
     //----------------------------  GET api ---------------------------- //
 
@@ -36,6 +37,15 @@ async function run() {
       const query = { _id: ObjectId(id) };
       const tool = await toolsCollection.findOne(query);
       res.send(tool);
+    });
+
+    //----------------------------  POST api ---------------------------- //
+
+    // post order
+    app.post("/order", async (req, res) => {
+      const order = req.body;
+      const result = await ordersCollection.insertOne(order);
+      res.send(result);
     });
   } finally {
   }
