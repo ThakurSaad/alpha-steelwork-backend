@@ -7,3 +7,4 @@
 - mongodb
 - dotenv
 - jsonwebtoken
+- stripe

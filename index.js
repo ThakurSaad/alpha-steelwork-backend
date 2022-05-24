@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -134,6 +135,18 @@ async function run() {
       res.send(result);
     });
 
+    // payment intent
+    app.post("/create-payment-intent", async (req, res) => {
+      const shouldPay = req.body.shouldPay;
+      const amount = shouldPay * 100;
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: amount,
+        currency: "usd",
+        payment_method_types: ["card"],
+      });
+      res.send({ clientSecret: paymentIntent.client_secret });
+    });
+
     //----------------------------  PUT api ---------------------------- //
 
     // update user data from my profile
@@ -181,14 +194,20 @@ async function run() {
     });
 
     // make admin
-    app.put("/users/admin/:id", async (req, res) => {
+    app.put("/users/admin/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
-      const filter = { _id: ObjectId(id) };
-      const updateDoc = {
-        $set: { role: "admin" },
-      };
-      const result = await usersCollection.updateOne(filter, updateDoc);
-      res.send(result);
+      const requester = req.decoded.email;
+      const requesterInfo = await usersCollection.findOne({ email: requester });
+      if (requesterInfo.role === "admin") {
+        const filter = { _id: ObjectId(id) };
+        const updateDoc = {
+          $set: { role: "admin" },
+        };
+        const result = await usersCollection.updateOne(filter, updateDoc);
+        return res.send(result);
+      } else {
+        return res.status(403).send({ message: "Forbidden access" });
+      }
     });
 
     //----------------------------  DELETE api ---------------------------- //
