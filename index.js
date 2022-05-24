@@ -42,6 +42,9 @@ async function run() {
 
     const toolsCollection = client.db("alpha_steelwork").collection("tools");
     const ordersCollection = client.db("alpha_steelwork").collection("orders");
+    const paymentsCollection = client
+      .db("alpha_steelwork")
+      .collection("payments");
     const usersCollection = client.db("alpha_steelwork").collection("users");
     const reviewsCollection = client
       .db("alpha_steelwork")
@@ -208,6 +211,22 @@ async function run() {
       } else {
         return res.status(403).send({ message: "Forbidden access" });
       }
+    });
+
+    // update payment status // add payment in paymentCollection
+    app.put("/orders/:id", async (req, res) => {
+      const id = req.params.id;
+      const payment = req.body;
+      const filter = { _id: ObjectId(id) };
+      const updateDoc = {
+        $set: {
+          paid: true,
+          transactionId: payment.transactionId,
+        },
+      };
+      const result = await ordersCollection.updateOne(filter, updateDoc);
+      const newPayment = await paymentsCollection.insertOne(payment);
+      res.send(result);
     });
 
     //----------------------------  DELETE api ---------------------------- //
