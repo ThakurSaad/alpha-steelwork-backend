@@ -115,6 +115,12 @@ async function run() {
       res.send(reviews);
     });
 
+    // all orders // admin
+    app.get("/orders", async (req, res) => {
+      const orders = await ordersCollection.find().toArray();
+      res.send(orders);
+    });
+
     //----------------------------  POST api ---------------------------- //
 
     // post order
@@ -226,6 +232,19 @@ async function run() {
       };
       const result = await ordersCollection.updateOne(filter, updateDoc);
       const newPayment = await paymentsCollection.insertOne(payment);
+      res.send(result);
+    });
+
+    // set shipment 
+    app.put("/order/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const updateDoc = {
+        $set: {
+          shipment: true,
+        },
+      };
+      const result = await ordersCollection.updateOne(filter, updateDoc);
       res.send(result);
     });
 
