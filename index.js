@@ -59,7 +59,7 @@ async function run() {
     });
 
     // single tool
-    app.get("/tool/purchase/:purchaseId", async (req, res) => {
+    app.get("/tool/purchase/:purchaseId", verifyJWT, async (req, res) => {
       const id = req.params.purchaseId;
       const query = { _id: ObjectId(id) };
       const tool = await toolsCollection.findOne(query);
@@ -81,7 +81,7 @@ async function run() {
     });
 
     // single order
-    app.get("/order/:id", async (req, res) => {
+    app.get("/order/:id", verifyJWT, async (req, res) => {
       const product = req.params.id;
       const query = { _id: ObjectId(product) };
       const order = await ordersCollection.findOne(query);
@@ -96,13 +96,13 @@ async function run() {
     });
 
     // all user
-    app.get("/users", async (req, res) => {
+    app.get("/users", verifyJWT, async (req, res) => {
       const users = await usersCollection.find().toArray();
       res.send(users);
     });
 
     // check admin role
-    app.get("/users/admin/:email", async (req, res) => {
+    app.get("/users/admin/:email", verifyJWT, async (req, res) => {
       const email = req.params.email;
       const user = await usersCollection.findOne({ email: email });
       const isAdmin = user.role === "admin";
@@ -116,7 +116,7 @@ async function run() {
     });
 
     // all orders // admin
-    app.get("/orders", async (req, res) => {
+    app.get("/orders", verifyJWT, async (req, res) => {
       const orders = await ordersCollection.find().toArray();
       res.send(orders);
     });
@@ -131,21 +131,21 @@ async function run() {
     });
 
     // post new tool
-    app.post("/tools", async (req, res) => {
+    app.post("/tools", verifyJWT, async (req, res) => {
       const tool = req.body;
       const result = await toolsCollection.insertOne(tool);
       res.send(result);
     });
 
     // post new review
-    app.post("/reviews", async (req, res) => {
+    app.post("/reviews", verifyJWT, async (req, res) => {
       const review = req.body;
       const result = await reviewsCollection.insertOne(review);
       res.send(result);
     });
 
     // payment intent
-    app.post("/create-payment-intent", async (req, res) => {
+    app.post("/create-payment-intent", verifyJWT, async (req, res) => {
       const shouldPay = req.body.shouldPay;
       const amount = shouldPay * 100;
       const paymentIntent = await stripe.paymentIntents.create({
@@ -159,7 +159,7 @@ async function run() {
     //----------------------------  PUT api ---------------------------- //
 
     // update user data from my profile
-    app.put("/users/:email", async (req, res) => {
+    app.put("/users/:email", verifyJWT, async (req, res) => {
       const email = req.params.email;
       const user = req.body;
       console.log(user, email);
@@ -220,7 +220,7 @@ async function run() {
     });
 
     // update payment status // add payment in paymentCollection
-    app.put("/orders/:id", async (req, res) => {
+    app.put("/orders/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
       const payment = req.body;
       const filter = { _id: ObjectId(id) };
@@ -236,7 +236,7 @@ async function run() {
     });
 
     // set shipment
-    app.put("/order/:id", async (req, res) => {
+    app.put("/order/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
       const filter = { _id: ObjectId(id) };
       const updateDoc = {
@@ -251,7 +251,7 @@ async function run() {
     //----------------------------  DELETE api ---------------------------- //
 
     // delete my order
-    app.delete("/order/:id", async (req, res) => {
+    app.delete("/order/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
       const order = { _id: ObjectId(id) };
       const result = await ordersCollection.deleteOne(order);
@@ -259,7 +259,7 @@ async function run() {
     });
 
     // delete tool from database
-    app.delete("/tool/:id", async (req, res) => {
+    app.delete("/tool/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
       const tool = { _id: ObjectId(id) };
       const result = await toolsCollection.deleteOne(tool);
