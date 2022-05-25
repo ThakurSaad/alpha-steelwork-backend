@@ -235,7 +235,7 @@ async function run() {
       res.send(result);
     });
 
-    // set shipment 
+    // set shipment
     app.put("/order/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: ObjectId(id) };
@@ -255,6 +255,14 @@ async function run() {
       const id = req.params.id;
       const order = { _id: ObjectId(id) };
       const result = await ordersCollection.deleteOne(order);
+      res.send(result);
+    });
+
+    // delete tool from database
+    app.delete("/tool/:id", async (req, res) => {
+      const id = req.params.id;
+      const tool = { _id: ObjectId(id) };
+      const result = await toolsCollection.deleteOne(tool);
       res.send(result);
     });
   } finally {
