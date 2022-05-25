@@ -55,7 +55,7 @@ async function run() {
     // all tools
     app.get("/tools", async (req, res) => {
       const tools = await toolsCollection.find().toArray();
-      res.send(tools);
+      res.send(tools.reverse());
     });
 
     // single tool
@@ -112,7 +112,7 @@ async function run() {
     // all reviews
     app.get("/reviews", async (req, res) => {
       const reviews = await reviewsCollection.find().toArray();
-      res.send(reviews);
+      res.send(reviews.reverse());
     });
 
     // all orders // admin
