@@ -1,6 +1,6 @@
 # Alpha steelwork server
 
-[Live server Link](https://infinite-basin-98544.herokuapp.com/)
+[Go to live server...](https://infinite-basin-98544.herokuapp.com/)
 
 ### Functionalities
 
